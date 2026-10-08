@@ -26,3 +26,15 @@ Everything here is an in-house ray-trace study (no OpticStudio available); lense
 2. Corner MTF 0.31 < 0.40 target; lateral colour dominates -> use the narrow FBH850-10 band.
 3. Cover-glass/filter thicknesses are placeholders (3 mm / 1 mm).
 4. Non-sequential cross-talk, tolerancing (Monte Carlo) and IR safety still to do.
+
+## Stock-lens swap (Thorlabs list, 272 single/pair configurations, `src/stock.py`, `opt_stock.py`, `refine_stock.py`, `fixLo.py`)
+Catalogue radii/glasses reproduce catalogue EFL within 1% (Sellmeier data from memory; doublet crown/flint thickness split assumed).
+Best stock option: **AC254-150 (reversed, N-BK7/SF5) + AC254-075-B**, touching (gap 0.05 mm), stop at the first lens, eye->lens **137.3 mm**, sensor 69.2 mm behind the filter/cover stack.
+| | stock pair | surrogate |
+|---|---|---|
+| m | 0.55 | 0.55 |
+| RMS spot | 5.5-16.2 um (mean ~12) | 4.1-8.9 um |
+| MTF@25 lp/mm | min 0.12, mean 0.28 | min 0.31 |
+| Image x range | 0.36-6.79 mm | 0.36-6.77 mm |
+At the requested 149.4 mm the same pairs only reach m ~ 0.49-0.50 (RMS 5-22 um) because the focal length is too long.
+Stock lenses do **not** meet the 0.40 MTF target; only the best-placed ~half of the field is near one pixel.
