@@ -41,3 +41,5 @@ Stock lenses do **not** meet the 0.40 MTF target; only the best-placed ~half of 
 
 ## Stock-lens build guide
 See `docs/STOCK_LENS_BUILD_GUIDE.md` (final stock design, step-by-step build, model-eye image simulation and analysis; `src/stock_final.py`, `src/simulate_images.py`, `results/sim_*.png`).
+
+OpticStudio walkthrough: `docs/ZEMAX_BUILD_STEPS.md`.
