@@ -38,3 +38,6 @@ Best stock option: **AC254-150 (reversed, N-BK7/SF5) + AC254-075-B**, touching (
 | Image x range | 0.36-6.79 mm | 0.36-6.77 mm |
 At the requested 149.4 mm the same pairs only reach m ~ 0.49-0.50 (RMS 5-22 um) because the focal length is too long.
 Stock lenses do **not** meet the 0.40 MTF target; only the best-placed ~half of the field is near one pixel.
+
+## Stock-lens build guide
+See `docs/STOCK_LENS_BUILD_GUIDE.md` (final stock design, step-by-step build, model-eye image simulation and analysis; `src/stock_final.py`, `src/simulate_images.py`, `results/sim_*.png`).
