@@ -13,10 +13,14 @@ LIB = {  # name: (EFL, diameter, surfaces)
  "LB1471":     (50.0, 25.4, [(50.6, 5.2, "air"), (-50.6, 0, None)]),
  "LA1131":     (49.8, 25.4, [(inf, 5.3, "air"), (-25.8, 0, None)]),
  "LE1234":     (100., 25.4, [(32.1, 3.6, "air"), (82.2, 0, None)]),
+ "LE1104":     (150., 25.4, [(49.1, 3.1, "air"), (131.6, 0, None)]),
+ "LBF254-100": (100., 25.4, [(60.02, 4.0, "air"), (-353.3, 0, None)]),
+ "LBF254-200": (200., 25.4, [(121.5, 4.0, "air"), (-684.5, 0, None)]),
+ "LA1229":     (174.4, 25.4, [(inf, 2.9, "air"), (-90.1, 0, None)]),
 }
 # first-glass assignment: doublets: crown N-BAF10/N-BK7 first then flint; fix media after each surface
 GL = {"AC254-050": ("N-BAF10", "N-SF10"), "AC254-075-B": ("N-BAF10", "N-SF6"), "AC254-150": ("N-BK7", "SF5"),
-      "AC508-150-B": ("N-LAK22", "N-SF6"), "LBF254-050": ("N-BK7",), "LB1471": ("N-BK7",), "LA1131": ("N-BK7",), "LE1234": ("N-BK7",)}
+      "AC508-150-B": ("N-LAK22", "N-SF6"), "LBF254-050": ("N-BK7",), "LB1471": ("N-BK7",), "LA1131": ("N-BK7",), "LE1234": ("N-BK7",), "LE1104": ("N-BK7",), "LBF254-100": ("N-BK7",), "LBF254-200": ("N-BK7",), "LA1229": ("N-BK7",)}
 def element(name, flip=False):
     efl, dia, S = LIB[name]; gl = GL[name]
     R = [s[0] for s in S]; t = [s[1] for s in S]
