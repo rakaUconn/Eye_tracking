@@ -1,4 +1,4 @@
-import numpy as np, sys, json
+import numpy as np, sys, json, os
 import simulate_images as SI
 rng = np.random.default_rng(5); out = {}
 poses = [(tx, ty) for tx in (-10, 0, 10) for ty in (-10, 0, 10)]
@@ -12,4 +12,4 @@ for dz in (-2, -1, -0.5, 0, 0.5, 1, 2):
             if dt["P4"] is not None and np.hypot(*(np.array(dt["P4"])-t4)) < 2.0: ok += 1; errs.append(np.hypot(*(np.array(dt["P4"])-t4)))
     out[dz] = dict(detect_rate=ok/n, p4_centroid_err_px=float(np.mean(errs)) if errs else None)
     print(dz, out[dz], flush=True)
-json.dump(out, open(f"../results/detect_vs_depth{SI.SUF}.json", "w"), indent=1)
+json.dump(out, open(f"../results/detect_vs_depth{SI.SUF}_bias{os.environ.get('FOCUS_BIAS','0')}.json", "w"), indent=1)

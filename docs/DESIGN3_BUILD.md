@@ -1,4 +1,4 @@
-# Design 3: three-element stock objective, stop Ø12 mm, eye -> first lens 199 mm (long tube)
+# Design 3 (selected design): three-element stock objective, stop Ø12 mm, eye -> first lens 199 mm (long tube)
 
 Elements: **LBF254-200 (reversed) + AC508-150-B (2 inch) + AC254-150**, all Thorlabs stock. Found by `src/search3.py` / `refine3.py`
 (`results/design3_final.json`), simulated with `DESIGN=design3_final python3 src/simulate_images.py`
@@ -62,6 +62,6 @@ Stop holes Ø12 mm, 13.0 mm apart: a 1.0 mm web between them, so the V-prism kni
 | Gaze error vs depth, detected frames | -2 mm: 0.20 deg, -1 mm: 0.10 deg, 0: 0.05 deg, +2 mm: 0.27 deg (the +1 mm run contained mis-detections, 21 deg RMS, before excluding missed P4 frames) |
 
 The shallower depth of field at f/10 makes P4 (1.2% of P1) too weak and too blurred when the eye moves **away** from the camera by about 1 mm; the 22 f/# design
-detected P4 at every depth shift tested (100% from -2 to +2 mm). Remedy to try: bias the focus about 0.5 mm of eye depth toward the camera-far side (move the camera
-about m^2 x 0.5 = 0.14 mm), use a longer exposure with a saturated P1, or hold the head within about -2/+0.5 mm of nominal.
+detected P4 at every depth shift tested (100% from -2 to +2 mm). Remedy (tested below): bias the focus about 0.5 mm of eye depth toward the camera-far side, or use a longer exposure with a saturated P1, or hold the head within about -2/+0.5 mm of nominal.
+**Focus-bias test (simulated, `FOCUS_BIAS` in `src/simulate_images.py`, `src/detect_vs_depth.py`):** focusing on a plane 0.5 mm of eye depth farther from the camera than the P1/P4 mean raises the P4 detection rate to **100% for eye depth shifts from -2 mm to +1 mm** (+2 mm: 44%); a 1.0 mm bias gives the same -2 to +1 mm range but with a 0.86 px P4 centroid error at -2 mm. Use a bias of about 0.5 mm (move the camera about m^2 x 0.5 = 0.14 mm from the best-focus position of the straight-gaze P1/P4 midpoint), then confirm on the real camera.
 These detection numbers come from one noise model and 27 frames per depth value; treat them as indicative.

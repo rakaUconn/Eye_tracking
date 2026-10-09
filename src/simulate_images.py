@@ -21,7 +21,7 @@ FWC, BITS, READ_E, P1_PEAK_E, P4_RATIO, BG_E = 15000., 10, 8.0, 9000., 0.012, 25
 BETA = {"L": 17.0, "R": -17.0}                          # source angle, mirrored for the second eye
 S_STOCK, ZS = SF.build(*PAR)
 # focal plane = mean P1/P4 depth at straight gaze
-g0 = glints(0, 0); ZF = 0.5*(g0[1][0][2] + g0[4][0][2])
+g0 = glints(0, 0); ZF = 0.5*(g0[1][0][2] + g0[4][0][2]) + float(os.environ.get('FOCUS_BIAS', 0.0))   # +: focus on a plane farther from the camera
 
 def gaze_glints(eye, tx, ty):
     g = glints(tx, ty, beta_deg=BETA[eye]); return g[1][0], g[4][0]          # lab xyz of P1, P4 virtual images
