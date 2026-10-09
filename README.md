@@ -61,3 +61,4 @@ OpticStudio walkthrough for Design 3: `docs/DESIGN3_ZEMAX.md`.
 collects **2.0× the light of Design 3** at better image quality (RMS 7.8 / 10.4 µm, MTF25 min 0.25), eye→lens 175.6 mm, 102 mm shorter overall.
 Swappable stop plates (Ø10.5 / Ø12.6 / Ø14.7) trade light for depth of field in the same barrel. Also documents a correction to the
 P4 signal model (`FLUX_MODE=1` in `src/simulate_images.py`).
+OpticStudio walkthrough for Design 4A: `docs/DESIGN4A_ZEMAX.md`.

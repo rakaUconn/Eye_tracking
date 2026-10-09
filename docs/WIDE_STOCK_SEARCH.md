@@ -71,7 +71,7 @@ What limits the light further is vignetting in the 1-inch rear lenses (3-element
 | IMA | sensor | | | | |
 
 Eye → first lens 175.6 mm; filter front → sensor 184.8 mm (Design 3: 262 mm); eye → sensor 356.5 mm (Design 3: 458 mm).
-Folded: eye → M1 30, M1 → V 25 (IPD 63), V → stop **116.8 mm**. Stop holes Ø14.7 mm, 15.32 mm apart (0.6 mm web; a Ø14.3 plate gives a
+Folded: eye → M1 30, M1 → V **23.84** (= IPD/2 − 7.66 at IPD 63; 19.3–29.3 mm over IPD 54–74), V → stop **117.92 mm** (30 + 23.84 + 117.92 = 171.76). Stop holes Ø14.7 mm, 15.32 mm apart (0.6 mm web; a Ø14.3 plate gives a
 1.0 mm web for 1.93× light). Image on each sensor half: x = 1.02–7.42 mm, m = 0.553 (18.1 µm per pixel in the eye).
 
 ### Performance
