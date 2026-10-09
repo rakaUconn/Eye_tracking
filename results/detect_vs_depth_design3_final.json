@@ -1,0 +1,30 @@
+{
+ "-2": {
+  "detect_rate": 1.0,
+  "p4_centroid_err_px": 0.12629585110184635
+ },
+ "-1": {
+  "detect_rate": 1.0,
+  "p4_centroid_err_px": 0.10774210080054984
+ },
+ "-0.5": {
+  "detect_rate": 1.0,
+  "p4_centroid_err_px": 0.1259515730843614
+ },
+ "0": {
+  "detect_rate": 1.0,
+  "p4_centroid_err_px": 0.09645861888061133
+ },
+ "0.5": {
+  "detect_rate": 0.9259259259259259,
+  "p4_centroid_err_px": 0.14185716148277783
+ },
+ "1": {
+  "detect_rate": 0.5925925925925926,
+  "p4_centroid_err_px": 0.4171083926404435
+ },
+ "2": {
+  "detect_rate": 0.7777777777777778,
+  "p4_centroid_err_px": 0.6359047888631983
+ }
+}

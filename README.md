@@ -47,3 +47,5 @@ OpticStudio walkthrough: `docs/ZEMAX_BUILD_STEPS.md`.
 200 mm variant: `docs/STOCK_200MM_DESIGN.md`.
 
 Stop-diameter / 2-inch study: `docs/STOP_DIAMETER_STUDY.md`.
+
+Design 3 (3-element stock objective, long tube): `docs/DESIGN3_BUILD.md`.

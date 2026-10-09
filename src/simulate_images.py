@@ -12,9 +12,11 @@ import os
 DESIGN = os.environ.get('DESIGN', 'stock_final'); SUF = '' if DESIGN == 'stock_final' else '_' + DESIGN
 P = json.load(open(f'../results/{DESIGN}.json'))
 if 'cfg' in P: SF.CFG = [tuple(c) for c in P['cfg']]
+if 'D' in P:
+    import multi; SF.SR = P['D']/2; SF.XC = -P['half']; SF.build = multi.build_multi
 PAR = (P['ts'], P['gap'], P['b']); LO = P['Lo']; M = P['m']
 PX = 0.010; W, H = 1920, 1080; XC, SR = SF.XC, SF.SR
-WL = 0.85; SUB = 5; SIG_DIFF_UM = 5.0                    # Gaussian stand-in for the Airy core at f/14
+WL = 0.85; SUB = 5; SIG_DIFF_UM = 0.42*0.85*P.get('fnum', 14.0)*1.0                    # Gaussian stand-in for the Airy core at f/14
 FWC, BITS, READ_E, P1_PEAK_E, P4_RATIO, BG_E = 15000., 10, 8.0, 9000., 0.012, 25.
 BETA = {"L": 17.0, "R": -17.0}                          # source angle, mirrored for the second eye
 S_STOCK, ZS = SF.build(*PAR)
@@ -59,15 +61,19 @@ def render(glint_pairs, noise=False, rng=None):
 PEAK_REF = {}
 
 def detect(dn, eye):
-    """find P1 (brightest) and P4 (second blob) in the half-frame of this eye; centroid with local background removal"""
+    """find P1 (brightest) and P4 (next blob near P1) in the half-frame of this eye; centroid with local background removal"""
     half = (slice(None), slice(W//2, W)) if eye == "L" else (slice(None), slice(0, W//2)); off = W//2 if eye == "L" else 0
     a = dn[half].astype(float); bg = median_filter(a[::4, ::4], size=15); bg = np.kron(bg, np.ones((4, 4)))[:a.shape[0], :a.shape[1]]
-    s = a - bg; sig = 1.4826*np.median(np.abs(s - np.median(s)))+1e-9
+    s = a - bg; sm = gaussian_filter(s, 1.5); sig = 1.4826*np.median(np.abs(sm - np.median(sm)))+1e-9
     out = {}
-    pk = np.unravel_index(np.argmax(s), s.shape); out["P1"] = refine(s, pk, off)
-    m = s.copy(); r, c = pk; m[max(r-12, 0):r+13, max(c-12, 0):c+13] = 0           # mask P1 + its wings
+    pk = np.unravel_index(np.argmax(sm), sm.shape); out["P1"] = refine(s, pk, off)
+    m = sm.copy(); r, c = pk
+    R = 250                                                     # P4 lies within ~250 px of P1 for the gaze range
+    win = np.zeros_like(m, bool); win[max(r-R, 0):r+R+1, max(c-R, 0):c+R+1] = True
+    m[~win] = 0; m[max(r-12, 0):r+13, max(c-12, 0):c+13] = 0   # mask P1 core
     pk2 = np.unravel_index(np.argmax(m), m.shape)
-    out["P4"] = refine(s, pk2, off) if m[pk2] > 6*sig else None
+    ok = m[pk2] > 6*sig and 6 <= pk2[0] < s.shape[0]-6 and 6 <= pk2[1] < s.shape[1]-6
+    out["P4"] = refine(s, pk2, off) if ok else None
     return out
 def refine(s, pk, off, hw=5):
     r, c = pk; sub = s[r-hw:r+hw+1, c-hw:c+hw+1].copy(); sub[sub < 0.15*sub.max()] = 0
