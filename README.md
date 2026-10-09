@@ -45,3 +45,5 @@ See `docs/STOCK_LENS_BUILD_GUIDE.md` (final stock design, step-by-step build, mo
 OpticStudio walkthrough: `docs/ZEMAX_BUILD_STEPS.md`.
 
 200 mm variant: `docs/STOCK_200MM_DESIGN.md`.
+
+Stop-diameter / 2-inch study: `docs/STOP_DIAMETER_STUDY.md`.
