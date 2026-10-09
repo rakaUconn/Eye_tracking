@@ -8,7 +8,10 @@ from eye import glints
 import stock_final as SF
 from channel import rays_from
 
-P = json.load(open('../results/stock_final.json'))
+import os
+DESIGN = os.environ.get('DESIGN', 'stock_final'); SUF = '' if DESIGN == 'stock_final' else '_' + DESIGN
+P = json.load(open(f'../results/{DESIGN}.json'))
+if 'cfg' in P: SF.CFG = [tuple(c) for c in P['cfg']]
 PAR = (P['ts'], P['gap'], P['b']); LO = P['Lo']; M = P['m']
 PX = 0.010; W, H = 1920, 1080; XC, SR = SF.XC, SF.SR
 WL = 0.85; SUB = 5; SIG_DIFF_UM = 5.0                    # Gaussian stand-in for the Airy core at f/14
@@ -95,7 +98,7 @@ if __name__ == "__main__":
         ax.annotate("P1 (saturated colour scale)", (x1-cx, y1-cy), (x1-cx-10, -30), color="w", fontsize=7, ha="center", arrowprops=dict(arrowstyle="->", color="w", lw=.6))
         ax.annotate("P4", (x4-cx, y4-cy), (x4-cx, -30), color="w", fontsize=7, ha="center", arrowprops=dict(arrowstyle="->", color="w", lw=.6))
         ax.set_title(f"left-eye crop, gaze {nm} (colour scale clipped at 40 DN)", fontsize=8); ax.set_xlabel("px")
-    fig.tight_layout(); fig.savefig('../results/sim_frames.png', dpi=130); plt.close()
+    fig.tight_layout(); fig.savefig(f'../results/sim_frames{SUF}.png', dpi=130); plt.close()
     import sys
     if len(sys.argv) > 1 and sys.argv[1] == 'frames': sys.exit()
     d0, t0 = frames["straight (0°,0°)"]
@@ -147,5 +150,5 @@ if __name__ == "__main__":
     ax[0].set_title(f"gaze error (arrows ×20), RMS {res['gaze_error_rms_deg']:.3f}°, max {res['gaze_error_max_deg']:.3f}°", fontsize=9); ax[0].set_xlabel("true yaw (deg)"); ax[0].set_ylabel("true pitch (deg)"); ax[0].set_aspect('equal')
     ax[1].scatter(Ft[:, 0], Ft[:, 1], c=Gt[:, 1], s=12); ax[1].set_title("P1−P4 feature (mm in eye space), colour = yaw", fontsize=9); ax[1].set_xlabel("dx (mm)"); ax[1].set_ylabel("dy (mm)")
     ax[2].plot([d for d, _ in dz_tab], [v for _, v in dz_tab], 'o-'); ax[2].set_title("gaze error vs eye depth shift", fontsize=9); ax[2].set_xlabel("depth shift (mm)"); ax[2].set_ylabel("RMS gaze error (deg)")
-    fig.tight_layout(); fig.savefig('../results/sim_analysis.png', dpi=130); plt.close()
-    json.dump(res, open('../results/sim_summary.json', 'w'), indent=1, default=float); print(json.dumps(res, indent=1, default=float))
+    fig.tight_layout(); fig.savefig(f'../results/sim_analysis{SUF}.png', dpi=130); plt.close()
+    json.dump(res, open(f'../results/sim_summary{SUF}.json', 'w'), indent=1, default=float); print(json.dumps(res, indent=1, default=float))
