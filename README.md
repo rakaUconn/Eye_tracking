@@ -49,3 +49,5 @@ OpticStudio walkthrough: `docs/ZEMAX_BUILD_STEPS.md`.
 Stop-diameter / 2-inch study: `docs/STOP_DIAMETER_STUDY.md`.
 
 Design 3 (3-element stock objective, long tube): `docs/DESIGN3_BUILD.md`.
+
+Relay (f150 + f75) check: `docs/RELAY_150_75.md`.
