@@ -27,10 +27,14 @@ LIB = {  # name: (EFL, diameter, surfaces)
  "LF1822":     (-100.0, 25.4, [(100.0, 3.0, "air"), (33.7, 0, None)]),
  "LF1097":     (-200.0, 25.4, [(100.0, 3.0, "air"), (50.2, 0, None)]),
  "LA1229":     (174.4, 25.4, [(inf, 2.9, "air"), (-90.1, 0, None)]),
+ # added for the wide search (search_wide.py)
+ "LC1611":     (-149.4, 50.8, [(inf, 4.0, "air"), (77.2, 0, None)]),
+ "LD1170":     (-75.0, 25.4, [(-77.9, 3.5, "air"), (77.9, 0, None)]),
+ "LF1988":     (-500.0, 25.4, [(250.0, 3.0, "air"), (126.3, 0, None)]),
 }
 # first-glass assignment: doublets: crown N-BAF10/N-BK7 first then flint; fix media after each surface
 GL = {"AC254-050": ("N-BAF10", "N-SF10"), "AC254-075-B": ("N-BAF10", "N-SF6"), "AC254-150": ("N-BK7", "SF5"),
-      "AC508-150-B": ("N-LAK22", "N-SF6"), "LBF254-050": ("N-BK7",), "LB1471": ("N-BK7",), "LA1131": ("N-BK7",), "LE1234": ("N-BK7",), "LE1104": ("N-BK7",), "LBF254-100": ("N-BK7",), "LBF254-200": ("N-BK7",), "LA1229": ("N-BK7",), "LA1979": ("N-BK7",), "LB1294": ("N-BK7",), "LB1199": ("N-BK7",), "LE1015": ("N-BK7",), "LC1120": ("N-BK7",), "LC1715": ("N-BK7",), "LD1613": ("N-BK7",), "LD1464": ("N-BK7",), "LF1822": ("N-BK7",), "LF1097": ("N-BK7",)}
+      "AC508-150-B": ("N-LAK22", "N-SF6"), "LBF254-050": ("N-BK7",), "LB1471": ("N-BK7",), "LA1131": ("N-BK7",), "LE1234": ("N-BK7",), "LE1104": ("N-BK7",), "LBF254-100": ("N-BK7",), "LBF254-200": ("N-BK7",), "LA1229": ("N-BK7",), "LA1979": ("N-BK7",), "LB1294": ("N-BK7",), "LB1199": ("N-BK7",), "LE1015": ("N-BK7",), "LC1120": ("N-BK7",), "LC1715": ("N-BK7",), "LD1613": ("N-BK7",), "LD1464": ("N-BK7",), "LF1822": ("N-BK7",), "LF1097": ("N-BK7",), "LC1611": ("N-BK7",), "LD1170": ("N-BK7",), "LF1988": ("N-BK7",)}
 def element(name, flip=False):
     efl, dia, S = LIB[name]; gl = GL[name]
     R = [s[0] for s in S]; t = [s[1] for s in S]

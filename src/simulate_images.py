@@ -9,7 +9,7 @@ import stock_final as SF
 from channel import rays_from
 
 import os
-DESIGN = os.environ.get('DESIGN', 'stock_final'); SUF = '' if DESIGN == 'stock_final' else '_' + DESIGN
+DESIGN = os.environ.get('DESIGN', 'stock_final'); SUF = ('' if DESIGN == 'stock_final' else '_' + DESIGN) + os.environ.get('TAG', '')
 P = json.load(open(f'../results/{DESIGN}.json'))
 if 'cfg' in P: SF.CFG = [tuple(c) for c in P['cfg']]
 if 'D' in P:
@@ -17,7 +17,7 @@ if 'D' in P:
 PAR = (P['ts'], P['gap'], P['b']); LO = P['Lo']; M = P['m']
 PX = 0.010; W, H = 1920, 1080; XC, SR = SF.XC, SF.SR
 WL = 0.85; SUB = 5; SIG_DIFF_UM = 0.42*0.85*P.get('fnum', 14.0)*1.0                    # Gaussian stand-in for the Airy core at f/14
-FWC, BITS, READ_E, P1_PEAK_E, P4_RATIO, BG_E = 15000., 10, 8.0, 9000., 0.012, 25.
+FWC, BITS, READ_E, P1_PEAK_E, P4_RATIO, BG_E = 15000., 10, 8.0, float(os.environ.get('P1_PEAK_E', 9000.)), 0.012, 25.
 BETA = {"L": 17.0, "R": -17.0}                          # source angle, mirrored for the second eye
 S_STOCK, ZS = SF.build(*PAR)
 # focal plane = mean P1/P4 depth at straight gaze
@@ -49,7 +49,10 @@ def render(glint_pairs, noise=False, rng=None):
             hist, _, _ = np.histogram2d(y, x, bins=[ye[::-1], xe]); hist = hist[::-1]
             hist = gaussian_filter(hist, SIG_DIFF_UM/(PX*1000/SUB))
             patch = hist.reshape(N, SUB, N, SUB).sum((1, 3))
-            patch *= amp*P1_PEAK_E/ (patch.max() if name == "P1" else PEAK_REF.get(eye, patch.max()))
+            if FLUX_MODE:   # fixed LED power: per-ray energy from the stop solid angle (vignetting and focus act physically)
+                patch *= amp*FLUX_E*LED_SCALE*(SR/LO/NA_D3)**2/N_RAYS
+            else:           # original model: P1 peak pinned to P1_PEAK_E, P4 peak = P4_RATIO x P1 peak (shape-dependent)
+                patch *= amp*P1_PEAK_E/ (patch.max() if name == "P1" else PEAK_REF.get(eye, patch.max()))
             if name == "P1": PEAK_REF[eye] = hist.reshape(N, SUB, N, SUB).sum((1, 3)).max()
             img[r0:r0+N, c0:c0+N] += patch
             truth[eye][name] = (cx, cy)
@@ -59,6 +62,13 @@ def render(glint_pairs, noise=False, rng=None):
     dn = np.clip(np.round(img/FWC*(2**BITS-1)), 0, 2**BITS-1)
     return dn, truth
 PEAK_REF = {}
+# FLUX_MODE=1: physically scaled signal. FLUX_E is calibrated so that Design 3 (straight gaze, nominal depth) has a P1 peak of
+# P1_PEAK_E (9000 e-); P4 then carries P4_RATIO of the P1 *flux*; other designs get (NA/NA_D3)^2 more flux at the same LED power.
+FLUX_MODE = os.environ.get('FLUX_MODE', '0') == '1'
+FLUX_E = float(os.environ.get('FLUX_E', 0)); LED_SCALE = float(os.environ.get('LED_SCALE', 1.0))
+NA_D3 = 6.0/196.00503374992388
+from channel import pupil as _pupil
+N_RAYS = len(_pupil(XC, SR, 60)[0])
 
 def detect(dn, eye):
     """find P1 (brightest) and P4 (next blob near P1) in the half-frame of this eye; centroid with local background removal"""
@@ -131,7 +141,8 @@ if __name__ == "__main__":
     # ---- 3. precision: repeated noisy frames at fixed gaze
     p1, p4 = gaze_glints("L", 5, 5); f_rep = []
     for i in range(200):
-        dn, _ = render({"L": (p1, p4)}, noise=True, rng=rng); dt = detect(dn, "L"); f_rep.append(feature(dt))
+        dn, _ = render({"L": (p1, p4)}, noise=True, rng=rng); dt = detect(dn, "L")
+        if dt["P4"] is not None: f_rep.append(feature(dt))
     f_rep = np.array(f_rep); gp = design_matrix(f_rep)@coef
     res['precision_deg_std'] = gp.std(0).tolist(); res['centroid_P1P4_std_px'] = (f_rep.std(0)*M/PX).tolist()
     # ---- 4. depth (head-position) sensitivity: eye moves +-1, +-2 mm along the camera axis
@@ -147,7 +158,8 @@ if __name__ == "__main__":
         for ty in (-10, 0, 10):
             for tx in (-10, 0, 10):
                 p1, p4 = gaze_glints("L", tx, ty); sh = np.array([dx, 0, 0])
-                dn, _ = render({"L": (p1+sh, p4+sh)}, noise=True, rng=rng); dt = detect(dn, "L"); F2.append(feature(dt)); G2.append((tx, ty))
+                dn, _ = render({"L": (p1+sh, p4+sh)}, noise=True, rng=rng); dt = detect(dn, "L")
+                if dt["P4"] is not None: F2.append(feature(dt)); G2.append((tx, ty))
         er = design_matrix(np.array(F2))@coef - np.array(G2, float); lat.append((dx, float(np.sqrt((er**2).sum(1).mean()))))
     res['lateral_shift_gaze_rms_deg'] = lat
     # ---- figure: gaze error map + P1-P4 vs gaze
