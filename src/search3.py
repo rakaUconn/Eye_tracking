@@ -36,7 +36,7 @@ def job(cfg):
     SF.build = build_multi; SF.CFG = cfg; SF.SR = D/2; SF.XC = -HALF
     F = fields(n=3, ex=11.6, ey=15.2, xc=-HALF); ng = len(cfg)-1
     bs = np.arange(30, 170, 8.0); best = None
-    for g0 in (1.0, 8.0):
+    for g0 in (3.0,):
         cs = [cost(np.r_[1.0, [g0]*ng, 196.0, b], F, 8, ng) for b in bs]
         if min(cs) >= 1e6: continue
         u = np.r_[1.0, [g0]*ng, 196.0, bs[int(np.argmin(cs))]]
@@ -49,9 +49,9 @@ if __name__ == "__main__":
     # base pairs from the 200 mm search
     rows = []
     for f in glob.glob('../results/stock200_[0-3].json'): rows += json.load(open(f))
-    rows = [r for r in sorted(rows, key=lambda r: r['cost']) if len(r['cfg']) == 2][:5]
+    rows = [r for r in sorted(rows, key=lambda r: r['cost']) if len(r['cfg']) == 2][:2]
     bases = [[tuple(c) for c in r['cfg']] for r in rows]
-    names = list(LIB.keys()); cand = []
+    names = [n for n in LIB if n.startswith(('LC','LD','LF','LE1','LE1234','LBF','LA12','LA11','LB1294','LB1471'))]; cand = []
     for n in names:
         for fl in (0, 1):
             if n in ("LB1471", "LB1294", "LB1199", "LD1613", "LD1464") and fl == 1: continue
