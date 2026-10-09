@@ -25,3 +25,22 @@ Findings
 * The biggest single light gain is a shorter eye distance: the 138 mm stock design (AC254-150 reversed + AC254-075-B) works at f/14 with the 6.25 mm
   stop, i.e. ~2.3x more light than the 205 mm design at the same stop, with similar spot size.
 * Larger D also costs depth of field (blur grows with D) and needs a wider hole spacing from D >= 12 mm (hole offset above 6.5 mm).
+
+## Adding a third stock element (stop diameter 12 mm, eye -> first lens 195-205 mm)
+`src/search3.py` (168 configurations: the two best pairs plus one extra stock lens - plano-convex, biconvex, meniscus, best-form or negative - in front, in the
+middle or behind), then `src/refine3.py` with wider spacing limits. Data: `results/search3_D12.json`, `results/search3_refined_D12.json`.
+The search is a beam extension, not exhaustive, and uses one optimiser start per configuration.
+
+| Design (all N-BK7 singlets/AC doublets, standard orientation unless noted) | RMS mean / max (um) | MTF25 min / mean | f/# | Vignetting | m | Eye -> lens |
+|---|---|---|---|---|---|---|
+| 2 x AC254-150 (reference, from the table above) | 13.4 / 16.9 | 0.02 / 0.29 | 11.6 | 8% | 0.59 | 205 |
+| LBF254-200 (reversed) + AC508-150-B + AC254-150 | **9.2 / 12.6** | 0.08 / **0.44** | 10.3 | 8% | 0.53 | 199 |
+| AC254-150 + AC254-150 + LBF254-200 | 10.9 / 15.7 | 0.13 / 0.40 | 10.5 | 7% | 0.53 | 205 |
+| AC508-150-B + AC254-150 + LA1229 | 12.8 / 16.3 | 0.01 / 0.33 | 10.6 | 1% | 0.53 | 205 |
+
+* A third stock element recovers part of the aberration cost of the larger stop: mean spot 13.4 -> 9.2 um and mean MTF25 0.29 -> 0.44 at the same f/10-11,
+  i.e. about 4.5x the light of the f/22 design with spots around one pixel.
+* The best designs put the extra best-form lens (f 200) far from the others with a long gap (60-110 mm) and the last lens only 30-45 mm in front of the sensor; the
+  tube is therefore long (roughly 250-300 mm from filter to sensor) and the lenses are not bunched together.
+* Worst-field MTF25 stays low (0.01-0.13) and vignetting is still 1-8%; these are not yet clean designs. Magnification drifted to 0.53 (outside the earlier 0.55 target).
+* The spacings were found by Nelder-Mead from one start and are likely local optima; a proper multi-start or global search could improve them.
